@@ -21,10 +21,22 @@ def depois_request(exc):
 
 @app.route("/")
 def exibir_entradas():
-    return render_template("exibir_entradas.html") # NÃO PRECISA INDICAR A PASTA?????
+    #return render_template("exibir_entradas.html", mensagem="Olá pessoas!!")
+    sql = "SELECT titulo, texto FROM entradas ORDER BY id DESC"
+    cur = g.bd.execute(sql)
+    entradas = []
+    for titulo, texto in cur.fetchall():
+        entradas.append({'titulo': titulo, 'texto': texto})
 
-@app.route("/hello")
-def pagina_inicial():
-    return "<h1 style='color: red'>Hello</h1>"
-    
+    return render_template('exibir_entradas.html', entradas=entradas )
 
+#@app.route("/hello")
+#def pagina_inicial():
+    #return "<h1 style='color: red'>Hello</h1>"
+
+@app.route('/inserir')
+def inserir_entrada():
+    sql = "INSERT INTO entradas(titulo, texto) VALUES ('Terceiro post', 'Esse é o post')"
+    g.bd.execute(sql)
+    g.bd.commit()
+    return redirect('/entradas')
