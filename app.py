@@ -12,7 +12,7 @@ def conectar_bd():
     return sqlite3.connect(app.config['DATABASE'])
 
 @app.before_request
-def antes_requisicao():
+def antes_requisicao():    
     g.bd = conectar_bd()
 
 @app.teardown_request
